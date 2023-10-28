@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ścieżka do lokalnego pliku z logami
-LOG_FILE="/ścieżka/do/twojego/przykładowego/logfile.log"
+LOG_FILE="logfile.log"
 
 # Utwórz przykładowy plik konfiguracyjny dla Vector
 cat <<EOF > vector-config.toml
