@@ -32,14 +32,14 @@ podman run -d --name clickhouse-container --ulimit nofile=262144:262144 yandex/c
 sleep 10
 
 # Uruchom kontener z Filebeat
-podman run -d --name filebeat-container docker.elastic.co/beats/filebeat:latest filebeat -e -strict.perms=false -E filebeat.config.inputs.path=filebeat-config.yml
+podman run -d --name filebeat-container -v filebeat-config.yml:/usr/share/filebeat/filebeat.yml -v /var/log/app:/var/log/app docker.elastic.co/beats/filebeat:latest -e -strict.perms=false
 
 # Oczekaj chwilę na uruchomienie kontenera Filebeat
 sleep 10
 
 # Benchmark zbierania logów za pomocą Filebeat
 echo "Benchmark zbierania logów za pomocą Filebeat"
-time filebeat -e -strict.perms=false
+podman exec -it filebeat-container filebeat -e -strict.perms=false
 
 # Oczekaj chwilę, aż Filebeat rozpocznie zbieranie logów
 sleep 10
@@ -53,4 +53,3 @@ podman stop filebeat-container
 podman stop clickhouse-container
 podman rm filebeat-container
 podman rm clickhouse-container
-
