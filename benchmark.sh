@@ -27,14 +27,25 @@ run_benchmark() {
   
   # Run the benchmark and capture the output
   time -o "$output_file" podman exec "$container_name" sh -c "$command_to_run"
+  
+  # Stop and remove the container
+  podman stop "$container_name"
+  podman rm "$container_name"
 }
 
-# Spin up containers for log collectors and databases
-run_benchmark "filebeat" "docker.io/library/filebeat:latest" "filebeat_benchmark.txt" "your_filebeat_command"
-run_benchmark "vector" "docker.io/timberio/vector:latest" "vector_benchmark.txt" "your_vector_command"
-run_benchmark "clickhouse" "docker.io/yandex/clickhouse-server:latest" "clickhouse_benchmark.txt" "your_clickhouse_command"
-run_benchmark "victorialogs" "docker.io/victorialogs/victorialogs:latest" "victorialogs_benchmark.txt" "your_victorialogs_command"
+# Vector + VictoriaLogs
+run_benchmark "vector_vl" "docker.io/timberio/vector:latest" "vector_vl_benchmark.txt" "vector -f test.log -o http://victorialogs_vl:8428/insert"
+
+run_benchmark "victorialogs_vl" "docker.io/victorialogs/victorialogs:latest" "victorialogs_vl_benchmark.txt" "curl http://localhost:8428/select/logsql/query -d 'query=error'"
+
+# Filebeat + VictoriaLogs
+run_benchmark "filebeat_vl" "docker.io/library/filebeat:latest" "filebeat_vl_benchmark.txt" "filebeat -e -strict.perms=false -c /etc/filebeat/filebeat.yml"
+
+# Vector + ClickHouse
+run_benchmark "vector_ch" "docker.io/timberio/vector:latest" "vector_ch_benchmark.txt" "vector -f test.log -o http://clickhouse_ch:8123/insert"
+
+run_benchmark "clickhouse_ch" "docker.io/yandex/clickhouse-server:latest" "clickhouse_ch_benchmark.txt" "clickhouse-client --host clickhouse_ch --query 'SELECT COUNT(*) FROM example_database.example_table'"
 
 # Clean up containers
-podman stop filebeat vector clickhouse victorialogs
-podman rm filebeat vector clickhouse victorialogs
+podman stop vector_vl victorialogs_vl filebeat_vl vector_ch clickhouse_ch
+podman rm vector_vl victorialogs_vl filebeat_vl vector_ch clickhouse_ch
