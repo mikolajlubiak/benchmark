@@ -27,10 +27,6 @@ run_benchmark() {
   
   # Run the benchmark and capture the output
   time -o "$output_file" podman exec "$container_name" sh -c "$command_to_run"
-  
-  # Stop and remove the container
-  podman stop "$container_name"
-  podman rm "$container_name"
 }
 
 # Spin up containers for log collectors and databases
@@ -40,12 +36,5 @@ run_benchmark "clickhouse" "docker.io/yandex/clickhouse-server:latest" "clickhou
 run_benchmark "victorialogs" "docker.io/victorialogs/victorialogs:latest" "victorialogs_benchmark.txt" "your_victorialogs_command"
 
 # Clean up containers
-podman stop filebeat
-podman stop vector
-podman stop clickhouse
-podman stop victorialogs
-podman rm filebeat
-podman rm vector
-podman rm clickhouse
-podman rm victorialogs
-
+podman stop filebeat vector clickhouse victorialogs
+podman rm filebeat vector clickhouse victorialogs
