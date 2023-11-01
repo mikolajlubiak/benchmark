@@ -27,10 +27,6 @@ run_benchmark() {
   
   # Run the benchmark and capture the output
   time -o "$output_file" podman exec "$container_name" sh -c "$command_to_run"
-  
-  # Stop and remove the container
-  podman stop "$container_name"
-  podman rm "$container_name"
 }
 
 # Vector + VictoriaLogs
