@@ -16,8 +16,8 @@ start_time = time.time()
 
 # Send logs to Vector
 for i in range(num_logs):
-   log = {"message": f"Log message {i}", "timestamp": time.time()}
-   requests.post(vector_url, data=json.dumps(log))
+  log = {"message": f"Log message {i}", "timestamp": time.time()}
+  requests.post(vector_url, data=json.dumps(log))
 
 # End time
 end_time = time.time()
@@ -29,8 +29,7 @@ print(f"Time taken to send logs: {end_time - start_time} seconds")
 start_time = time.time()
 
 # Query logs from VictoriaLogs
-response = requests.get(f"{victorialogs_url}/api/v1/query?query=LogsQL query")
-logs = response.json()
+response = requests.post(f"{victorialogs_url}/select/logsql/query", data={'query': '*'})
 
 # End time
 end_time = time.time()
