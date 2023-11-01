@@ -22,7 +22,7 @@ run_benchmark() {
   local command_to_run="$4"
   
   # Start the container
-  podman run -d --name "$container_name" "$image_name"
+  podman run -d --network host --name "$container_name" "$image_name"
   wait_for_container "$container_name"
   
   # Run the benchmark and capture the output
