@@ -3,7 +3,7 @@ import requests
 import json
 
 # Replace with the IP address of your Vector instance
-vector_url = "http://localhost:8686"
+vector_url = "http://localhost:8787/"
 
 # Replace with the IP address of your VictoriaLogs instance
 victorialogs_url = "http://localhost:9428"

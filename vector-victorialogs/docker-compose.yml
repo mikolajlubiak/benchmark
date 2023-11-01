@@ -15,6 +15,7 @@ services:
     user: root
     ports:
       - '8686:8686'
+      - '8787:8787'
     depends_on:
       victorialogs:
         condition: service_healthy
