@@ -2,11 +2,13 @@ import time
 import requests
 import json
 
+print("startuje benchmark...")
+
 # Replace with the IP address of your Vector instance
 vector_url = "http://localhost:8787/"
 
 # Replace with the IP address of your VictoriaLogs instance
-victorialogs_url = "http://localhost:9428"
+victorialogs_url = "http://localhost:9428/select/logsql/query"
 
 # Number of logs to send
 num_logs = 10000
@@ -29,7 +31,7 @@ print(f"Time taken to send logs: {end_time - start_time} seconds")
 start_time = time.time()
 
 # Query logs from VictoriaLogs
-response = requests.post(f"{victorialogs_url}/select/logsql/query", data={'query': '*'})
+response = requests.post(f"{victorialogs_url}", data={'query': '*'})
 
 # End time
 end_time = time.time()

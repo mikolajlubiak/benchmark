@@ -1,33 +1,21 @@
-[api]
-  enabled = true
-  address = "0.0.0.0:8686"
+# [api]
+#   enabled = true
+#   address = "0.0.0.0:8686"
 
-
-
+# [sources.benchmark_vector]
+#   type = "http_server"
+#   address = "0.0.0.0:8787"
+#   encoding = "json"
+#   # path_key = "vector_http_path"
 
 [sources.benchmark_vector]
-  type = "http_server"
-  address = "0.0.0.0:8787"
-  encoding = "json"
-  # path_key = "vector_http_path"
+  type = "stdin"
 
 [sinks.benchmark_victorialogs]
   type = "elasticsearch"
-  inputs = [ "benchmark" ]
+  inputs = [ "benchmark_vector" ]
   endpoints = [ "http://victorialogs:9428/insert/elasticsearch/" ]
   mode = "bulk"
   api_version = "v8"
-  compression = "gzip"
-  healthcheck.enabled = false
-
-
-
-
-[sources.vector_metrics]
-  type = "internal_metrics"
-
-[sinks.victoriametrics]
-  type = "prometheus_remote_write"
-  endpoint = "http://victoriametrics:8428/api/v1/write"
-  inputs = ["vector_metrics"]
+  # compression = "gzip"
   healthcheck.enabled = false
